@@ -40,10 +40,14 @@ resource "random_string" "boundary" {
 }
 
 resource "aws_s3_bucket" "boundary" {
-  acl           = "private"
   bucket        = "boundary-${random_string.boundary.result}"
   force_destroy = true
   tags          = local.tags
+}
+
+resource "aws_s3_bucket_acl" "boundary" {
+  bucket = aws_s3_bucket.boundary.id
+  acl    = "private"
 }
 
 module "controllers" {
